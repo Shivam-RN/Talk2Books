@@ -37,8 +37,12 @@ const Navbar = () => {
 
                     <div className="flex gap-7.5 items-center">
                         <Show when="signed-out">
-                            <SignInButton mode="modal" />
-                        </Show>
+                            <SignInButton mode="modal">
+                                <button className="cursor-pointer nav-link-base">
+                                Sign In
+                                </button>
+                            </SignInButton>
+                            </Show>
                         <Show when="signed-in">
                             <div className="nav-user-link">
                                 <UserButton />
