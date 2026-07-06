@@ -89,3 +89,43 @@ export const checkBookExists = async (title: string) => {
         }
     }
 }
+
+export const getAllBooks = async (search?: string) => {
+    try {
+        await connectToDatabase();
+
+        const books = await Book.find().sort({ createdAt: -1 }).lean();
+
+        return {
+            success: true,
+            data: serializeData(books)
+        }
+    } catch (e) {
+        console.error('Error connecting to database', e);
+        return {
+            success: false, error: e
+        }
+    }
+}
+
+export const getBookBySlug = async (slug: string) => {
+    try {
+        await connectToDatabase();
+
+        const book = await Book.findOne({ slug }).lean();
+
+        if (!book) {
+            return { success: false, error: 'Book not found' };
+        }
+
+        return {
+            success: true,
+            data: serializeData(book)
+        }
+    } catch (e) {
+        console.error('Error fetching book by slug', e);
+        return {
+            success: false, error: e
+        }
+    }
+}

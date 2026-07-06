@@ -16,7 +16,6 @@ let cached = global.mongooseCache || (global.mongooseCache = { conn: null, promi
 export const connectToDatabase = async () => {
     if (cached.conn) return cached.conn;
 
-    console.log("Mongo URI:", process.env.MONGODB_URI);
 
     if (!cached.promise) {
         cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false });
@@ -30,6 +29,6 @@ export const connectToDatabase = async () => {
         throw e;
     }
 
-    console.info('Connected to MongoDB');
+    
     return cached.conn;
 }
