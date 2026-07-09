@@ -41,8 +41,10 @@ const Transcript = ({ messages, currentMessage, currentUserMessage }: Transcript
   }
 
   return (
-    <div ref={scrollRef} className="transcript-messages overflow-y-auto pr-2 flex-1">
-      {messages.map((message, index) => (
+<div
+  ref={scrollRef}
+  className="transcript-messages"
+>    {messages.map((message, index) => (
         <div
           key={index}
           className={`transcript-message ${

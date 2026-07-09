@@ -73,8 +73,12 @@ const VapiControls = ({ book }: { book: IBook }) => {
             <button
               onClick={isActive ? stop : start}
               disabled={status === "connecting"}
-              aria-label={isActive ? "Stop voice assistant" : "Start voice assistant"}
-              title={isActive ? "Stop voice assistant" : "Start voice assistant"}
+              aria-label={
+                isActive ? "Stop voice assistant" : "Start voice assistant"
+              }
+              title={
+                isActive ? "Stop voice assistant" : "Start voice assistant"
+              }
               className={`vapi-mic-btn shadow-md w-15! h-15! z-10 ${isActive ? "vapi-mic-btn-active" : "vapi-mic-btn-inactive"}`}
             >
               {isActive ? (
@@ -112,23 +116,21 @@ const VapiControls = ({ book }: { book: IBook }) => {
 
             {/* Timer */}
             <div className="vapi-status-indicator">
-              <span className="vapi-status-text">
-                  0:00/15:00
-              </span>{" "}
+              <span className="vapi-status-text">0:00/15:00</span>{" "}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="transcript-container min-h-100">
-        <div className="transcript-empty">
-          <Transcript
+      <div className="vapi-transcript-wrapper">
+    <div className="transcript-container">
+        <Transcript
             messages={messages}
             currentMessage={currentMessage}
             currentUserMessage={currentUserMessage}
-          />
-        </div>
-      </div>
+        />
+    </div>
+</div>
     </>
   );
 };
