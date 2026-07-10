@@ -22,6 +22,7 @@ const VapiControls = ({ book }: { book: IBook }) => {
     stop,
     limitError,
     clearError,
+    maxDurationSeconds
   } = useVapi(book);
   const router = useRouter();
 
@@ -116,21 +117,23 @@ const VapiControls = ({ book }: { book: IBook }) => {
 
             {/* Timer */}
             <div className="vapi-status-indicator">
-              <span className="vapi-status-text">0:00/15:00</span>{" "}
+              <span className="vapi-status-text">
+                {formatDuration(duration)}/{formatDuration(maxDurationSeconds)}
+              </span>{" "}
             </div>
           </div>
         </div>
       </div>
 
       <div className="vapi-transcript-wrapper">
-    <div className="transcript-container">
-        <Transcript
+        <div className="transcript-container">
+          <Transcript
             messages={messages}
             currentMessage={currentMessage}
             currentUserMessage={currentUserMessage}
-        />
-    </div>
-</div>
+          />
+        </div>
+      </div>
     </>
   );
 };
