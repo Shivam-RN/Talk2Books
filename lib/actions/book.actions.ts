@@ -6,6 +6,8 @@ import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
+import { PLAN_LIMITS } from "../subscription-constants";
+import { getUserPlan } from "../subscription.server";
 
 export const createBook = async (data: CreateBook) => {
   try {
@@ -18,6 +20,29 @@ export const createBook = async (data: CreateBook) => {
         success: true,
         data: serializeData(existingBook),
         alreadyExists: true,
+      };
+    }
+
+    const { auth } = await import("@clerk/nextjs/server");
+    const { userId } = await auth();
+
+    if (!userId || userId !== data.clerkId) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const plan = await getUserPlan();
+    const limits = PLAN_LIMITS[plan];
+
+    const bookCount = await Book.countDocuments({ clerkId: userId });
+
+    if (bookCount >= limits.maxBooks) {
+      const { revalidatePath } = await import("next/cache");
+      revalidatePath("/");
+
+      return {
+        success: false,
+        error: `You have reached the maximum number of books allowed for your ${plan} plan (${limits.maxBooks}). Please upgrade to add more books.`,
+        isBillingError: true,
       };
     }
 
