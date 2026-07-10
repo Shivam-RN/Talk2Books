@@ -132,23 +132,35 @@ export const checkBookExists = async (title: string) => {
 };
 
 export const getAllBooks = async (search?: string) => {
-  try {
-    await connectToDatabase();
+    try {
+        await connectToDatabase();
 
-    const books = await Book.find().sort({ createdAt: -1 }).lean();
+        let query = {};
 
-    return {
-      success: true,
-      data: serializeData(books),
-    };
-  } catch (e) {
-    console.error("Error connecting to database", e);
-    return {
-      success: false,
-      error: e,
-    };
-  }
-};
+        if (search) {
+            const escapedSearch = escapeRegex(search);
+            const regex = new RegExp(escapedSearch, 'i');
+            query = {
+                $or: [
+                    { title: { $regex: regex } },
+                    { author: { $regex: regex } },
+                ]
+            };
+        }
+
+        const books = await Book.find(query).sort({ createdAt: -1 }).lean();
+
+        return {
+            success: true,
+            data: serializeData(books)
+        }
+    } catch (e) {
+        console.error('Error connecting to database', e);
+        return {
+            success: false, error: e
+        }
+    }
+}
 
 export const getBookBySlug = async (slug: string) => {
   try {
